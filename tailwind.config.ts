@@ -47,6 +47,38 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
+        "quest-active": {
+          DEFAULT: "hsl(var(--quest-active))",
+          foreground: "hsl(var(--quest-active-foreground))",
+        },
+        "quest-completed": {
+          DEFAULT: "hsl(var(--quest-completed))",
+          foreground: "hsl(var(--quest-completed-foreground))",
+        },
+        achievement: {
+          DEFAULT: "hsl(var(--achievement))",
+          foreground: "hsl(var(--achievement-foreground))",
+        },
+        "xp-bar": {
+          DEFAULT: "hsl(var(--xp-bar))",
+          bg: "hsl(var(--xp-bar-bg))",
+        },
+        "level-badge": {
+          DEFAULT: "hsl(var(--level-badge))",
+          foreground: "hsl(var(--level-badge-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

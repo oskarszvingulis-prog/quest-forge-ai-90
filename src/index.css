@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 263 70% 50%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -34,7 +34,29 @@ All colors MUST be HSL.
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 263 70% 50%;
+
+    /* Gamification colors */
+    --success: 142 76% 36%;
+    --success-foreground: 355.7 100% 97.3%;
+    --warning: 45 93% 47%;
+    --warning-foreground: 26 83% 14%;
+    --info: 221 83% 53%;
+    --info-foreground: 210 40% 98%;
+    
+    /* Quest & Achievement colors */
+    --quest-active: 32 98% 83%;
+    --quest-active-foreground: 26 83% 14%;
+    --quest-completed: 142 76% 36%;
+    --quest-completed-foreground: 355.7 100% 97.3%;
+    --achievement: 51 100% 50%;
+    --achievement-foreground: 26 83% 14%;
+    
+    /* XP & Progress colors */
+    --xp-bar: 263 70% 50%;
+    --xp-bar-bg: 214.3 31.8% 91.4%;
+    --level-badge: 288 89% 58%;
+    --level-badge-foreground: 210 40% 98%;
 
     --radius: 0.5rem;
 
@@ -65,8 +87,8 @@ All colors MUST be HSL.
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 263 70% 60%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -82,7 +104,29 @@ All colors MUST be HSL.
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 263 70% 60%;
+
+    /* Gamification colors - Dark mode */
+    --success: 142 76% 42%;
+    --success-foreground: 210 40% 98%;
+    --warning: 45 93% 52%;
+    --warning-foreground: 210 40% 98%;
+    --info: 221 83% 58%;
+    --info-foreground: 210 40% 98%;
+    
+    /* Quest & Achievement colors - Dark mode */
+    --quest-active: 32 98% 70%;
+    --quest-active-foreground: 222.2 84% 4.9%;
+    --quest-completed: 142 76% 42%;
+    --quest-completed-foreground: 210 40% 98%;
+    --achievement: 51 100% 55%;
+    --achievement-foreground: 222.2 84% 4.9%;
+    
+    /* XP & Progress colors - Dark mode */
+    --xp-bar: 263 70% 60%;
+    --xp-bar-bg: 217.2 32.6% 17.5%;
+    --level-badge: 288 89% 65%;
+    --level-badge-foreground: 210 40% 98%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
