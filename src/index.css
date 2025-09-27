@@ -8,33 +8,41 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Oracle-themed mystical design system */
+    --background: 225 15% 8%;
+    --foreground: 280 20% 92%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 225 20% 12%;
+    --card-foreground: 280 20% 92%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 225 25% 10%;
+    --popover-foreground: 280 20% 92%;
 
-    --primary: 263 70% 50%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 280 85% 65%;
+    --primary-foreground: 225 15% 8%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 260 15% 20%;
+    --secondary-foreground: 280 20% 85%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 260 15% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 100% 70%;
+    --accent-foreground: 225 15% 8%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 280 20% 92%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 263 70% 50%;
+    --border: 240 15% 25%;
+    --input: 240 20% 18%;
+    --ring: 280 85% 65%;
+
+    /* Oracle-specific colors */
+    --oracle-glow: 280 85% 65%;
+    --oracle-secondary: 260 60% 55%;
+    --mystic-gold: 45 100% 70%;
+    --cosmic-blue: 220 85% 65%;
+    --ethereal-purple: 300 75% 70%;
 
     /* Gamification colors */
     --success: 142 76% 36%;
@@ -77,34 +85,42 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  .light {
+    /* Light mode - Ethereal theme */
+    --background: 280 30% 95%;
+    --foreground: 225 25% 15%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 280 40% 98%;
+    --card-foreground: 225 25% 15%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 280 40% 97%;
+    --popover-foreground: 225 25% 15%;
 
-    --primary: 263 70% 60%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 280 70% 55%;
+    --primary-foreground: 280 30% 95%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 260 25% 90%;
+    --secondary-foreground: 225 25% 25%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 260 20% 92%;
+    --muted-foreground: 240 15% 45%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45 90% 60%;
+    --accent-foreground: 225 25% 15%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 280 30% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 263 70% 60%;
+    --border: 260 20% 85%;
+    --input: 260 25% 88%;
+    --ring: 280 70% 55%;
+
+    /* Oracle-specific colors - Light mode */
+    --oracle-glow: 280 70% 55%;
+    --oracle-secondary: 260 50% 60%;
+    --mystic-gold: 45 90% 60%;
+    --cosmic-blue: 220 70% 60%;
+    --ethereal-purple: 300 65% 65%;
 
     /* Gamification colors - Dark mode */
     --success: 142 76% 42%;
@@ -136,9 +152,6 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
-
-@layer base {
   * {
     @apply border-border;
   }

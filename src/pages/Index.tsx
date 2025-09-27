@@ -1,28 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { OracleLanding } from '@/components/OracleLanding';
+import { OracleChat } from '@/components/OracleChat';
+import { ModularWorkspace } from '@/components/ModularWorkspace';
 import { Button } from '@/components/ui/button';
-import { MentorChat } from '@/components/MentorChat';
-import { QuestSystem } from '@/components/QuestSystem';
-import { ProgressTracker } from '@/components/ProgressTracker';
-import { ProfileSetup } from '@/components/ProfileSetup';
-import { 
-  Brain, 
-  Target, 
-  Trophy, 
-  Settings,
-  Moon,
-  Sun,
-  Sparkles
-} from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
-interface UserProfile {
-  name: string;
-  goals: string[];
-  interests: string[];
-  motivationStyle: 'encouraging' | 'challenging' | 'analytical';
-  experience: 'beginner' | 'intermediate' | 'advanced';
-  availableTime: string;
-  preferredDifficulty: 'easy' | 'medium' | 'hard';
+type AppState = 'landing' | 'oracle-chat' | 'workspace';
+
+interface UserSession {
+  initialMessage: string;
+  activeModules: string[];
+  createdAt: Date;
 }
 
 interface Quest {
@@ -60,7 +48,8 @@ interface Achievement {
 }
 
 const Index = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [appState, setAppState] = useState<AppState>('landing');
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
   const [quests, setQuests] = useState<Quest[]>([]);
   const [userStats, setUserStats] = useState<UserStats>({
     level: 1,
@@ -72,17 +61,22 @@ const Index = () => {
     longestStreak: 0,
     achievements: []
   });
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true); // Default to dark theme for oracle aesthetic
 
   // Load data from localStorage on mount
   useEffect(() => {
-    const savedProfile = localStorage.getItem('questforge-profile');
-    const savedQuests = localStorage.getItem('questforge-quests');
-    const savedStats = localStorage.getItem('questforge-stats');
-    const savedTheme = localStorage.getItem('questforge-theme');
+    const savedSession = localStorage.getItem('pathkeeper-session');
+    const savedQuests = localStorage.getItem('pathkeeper-quests');
+    const savedStats = localStorage.getItem('pathkeeper-stats');
+    const savedTheme = localStorage.getItem('pathkeeper-theme');
 
-    if (savedProfile) {
-      setUserProfile(JSON.parse(savedProfile));
+    if (savedSession) {
+      const parsedSession = JSON.parse(savedSession);
+      setUserSession({
+        ...parsedSession,
+        createdAt: new Date(parsedSession.createdAt)
+      });
+      setAppState(parsedSession.activeModules.length > 0 ? 'workspace' : 'oracle-chat');
     }
 
     if (savedQuests) {
@@ -103,22 +97,26 @@ const Index = () => {
       setUserStats(parsedStats);
     }
 
-    if (savedTheme === 'dark') {
-      setDarkMode(true);
+    // Default to dark mode for oracle aesthetic
+    const isDarkMode = savedTheme === 'light' ? false : true;
+    setDarkMode(isDarkMode);
+    if (isDarkMode) {
       document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 
   // Save data to localStorage
-  const saveData = (profile?: UserProfile, questList?: Quest[], stats?: UserStats) => {
-    if (profile) {
-      localStorage.setItem('questforge-profile', JSON.stringify(profile));
+  const saveData = (session?: UserSession, questList?: Quest[], stats?: UserStats) => {
+    if (session) {
+      localStorage.setItem('pathkeeper-session', JSON.stringify(session));
     }
     if (questList) {
-      localStorage.setItem('questforge-quests', JSON.stringify(questList));
+      localStorage.setItem('pathkeeper-quests', JSON.stringify(questList));
     }
     if (stats) {
-      localStorage.setItem('questforge-stats', JSON.stringify(stats));
+      localStorage.setItem('pathkeeper-stats', JSON.stringify(stats));
     }
   };
 
@@ -128,23 +126,30 @@ const Index = () => {
     
     if (newDarkMode) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('questforge-theme', 'dark');
+      localStorage.setItem('pathkeeper-theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('questforge-theme', 'light');
+      localStorage.setItem('pathkeeper-theme', 'light');
     }
   };
 
-  const handleProfileComplete = (profile: UserProfile) => {
-    setUserProfile(profile);
-    saveData(profile);
+  const handleFirstInteraction = (message: string) => {
+    const newSession: UserSession = {
+      initialMessage: message,
+      activeModules: [],
+      createdAt: new Date()
+    };
     
+    setUserSession(newSession);
+    setAppState('oracle-chat');
+    saveData(newSession);
+
     // Add welcome achievement
     const welcomeAchievement: Achievement = {
-      id: 'welcome',
-      name: 'Welcome Adventurer',
-      description: 'Started your productivity journey!',
-      icon: '🎉',
+      id: 'oracle-awakened',
+      name: 'Oracle Awakened',
+      description: 'Connected with your AI Path Keeper!',
+      icon: '🔮',
       unlockedAt: new Date(),
       rarity: 'common'
     };
@@ -154,13 +159,24 @@ const Index = () => {
       achievements: [welcomeAchievement]
     };
     setUserStats(newStats);
-    saveData(profile, undefined, newStats);
+    saveData(newSession, undefined, newStats);
   };
 
-  const handleQuestGenerated = (quest: Quest) => {
-    const newQuests = [...quests, quest];
-    setQuests(newQuests);
-    saveData(undefined, newQuests);
+  const handleModuleActivation = (moduleIds: string[]) => {
+    if (!userSession) return;
+    
+    const updatedSession = {
+      ...userSession,
+      activeModules: moduleIds
+    };
+    
+    setUserSession(updatedSession);
+    setAppState('workspace');
+    saveData(updatedSession);
+  };
+
+  const handleBackToOracle = () => {
+    setAppState('oracle-chat');
   };
 
   const handleQuestComplete = (questId: string, xpGained: number) => {
@@ -235,86 +251,47 @@ const Index = () => {
     saveData(undefined, updatedQuests);
   };
 
-  // Show profile setup if no profile exists
-  if (!userProfile) {
-    return <ProfileSetup onProfileComplete={handleProfileComplete} />;
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground">
-                <Brain className="w-6 h-6" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">Quest Forge AI</h1>
-                <p className="text-sm text-muted-foreground">
-                  Welcome back, {userProfile.name}!
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-level-badge text-level-badge-foreground">
-                <Sparkles className="w-4 h-4" />
-                <span className="font-medium">Level {userStats.level}</span>
-              </div>
-              
-              <Button variant="ghost" size="sm" onClick={toggleTheme}>
-                {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </Button>
-              
-              <Button variant="ghost" size="sm">
-                <Settings className="w-4 h-4" />
-              </Button>
-            </div>
+    <>
+      {/* Theme toggle - floating */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={toggleTheme}
+          className="bg-card/80 backdrop-blur-sm border border-oracle-glow/30"
+        >
+          {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        </Button>
+      </div>
+
+      {/* App States */}
+      {appState === 'landing' && (
+        <OracleLanding onFirstInteraction={handleFirstInteraction} />
+      )}
+
+      {appState === 'oracle-chat' && userSession && (
+        <div className="min-h-screen bg-background">
+          <div className="container mx-auto px-4 py-8 max-w-4xl">
+            <OracleChat
+              initialMessage={userSession.initialMessage}
+              onModuleActivation={handleModuleActivation}
+            />
           </div>
         </div>
-      </header>
+      )}
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="mentor" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
-            <TabsTrigger value="mentor" className="flex items-center gap-2">
-              <Brain className="w-4 h-4" />
-              Mentor
-            </TabsTrigger>
-            <TabsTrigger value="quests" className="flex items-center gap-2">
-              <Target className="w-4 h-4" />
-              Quests
-            </TabsTrigger>
-            <TabsTrigger value="progress" className="flex items-center gap-2">
-              <Trophy className="w-4 h-4" />
-              Progress
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="mentor" className="space-y-6">
-            <MentorChat 
-              onQuestGenerated={handleQuestGenerated}
-              userProfile={userProfile}
-            />
-          </TabsContent>
-
-          <TabsContent value="quests" className="space-y-6">
-            <QuestSystem
-              quests={quests}
-              onQuestComplete={handleQuestComplete}
-              onQuestUpdate={handleQuestUpdate}
-            />
-          </TabsContent>
-
-          <TabsContent value="progress" className="space-y-6">
-            <ProgressTracker stats={userStats} />
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+      {appState === 'workspace' && userSession && (
+        <ModularWorkspace
+          activeModules={userSession.activeModules}
+          onBackToOracle={handleBackToOracle}
+          userStats={userStats}
+          quests={quests}
+          onQuestComplete={handleQuestComplete}
+          onQuestUpdate={handleQuestUpdate}
+        />
+      )}
+    </>
   );
 };
 

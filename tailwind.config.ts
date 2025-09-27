@@ -79,6 +79,11 @@ export default {
           DEFAULT: "hsl(var(--level-badge))",
           foreground: "hsl(var(--level-badge-foreground))",
         },
+        "oracle-glow": "hsl(var(--oracle-glow))",
+        "oracle-secondary": "hsl(var(--oracle-secondary))",
+        "mystic-gold": "hsl(var(--mystic-gold))",
+        "cosmic-blue": "hsl(var(--cosmic-blue))",
+        "ethereal-purple": "hsl(var(--ethereal-purple))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
