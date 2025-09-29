@@ -44,6 +44,60 @@ export const MentorPath: React.FC<MentorPathProps> = ({ onPathGenerated }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentPath, setCurrentPath] = useState<LearningPath | null>(null);
 
+  const buildFallbackPath = (goal: string): LearningPath => {
+    const topic = goal.trim() || 'your goal';
+    const mkTask = (m: number, t: number, title: string, description: string): Task => ({
+      id: `${m}-${t}`,
+      title,
+      description,
+      completed: false,
+    });
+
+    return {
+      goal,
+      milestones: [
+        {
+          id: '1',
+          title: `Foundation: ${topic}`,
+          description: `Learn the fundamentals needed to start with ${topic}.`,
+          order: 1,
+          tasks: [
+            mkTask(1,1,`Set up your tools for ${topic}`,'Install required apps and create a dedicated workspace.'),
+            mkTask(1,2,'Study core concepts','Spend 2 hours reading a beginner-friendly overview.'),
+            mkTask(1,3,'Make a weekly plan','Define 3 time blocks per week for practice.'),
+          ],
+        },
+        {
+          id: '2',
+          title: `Practice: ${topic}`,
+          description: 'Build skill through guided exercises.',
+          order: 2,
+          tasks: [
+            mkTask(2,1,'Do a small project','Complete a 60–90 minute project following a tutorial.'),
+            mkTask(2,2,'Get feedback','Share your work with a friend or community and note improvements.'),
+            mkTask(2,3,'Reflect and adjust','Write 5 bullet points on what to improve next week.'),
+          ],
+        },
+        {
+          id: '3',
+          title: `Apply & Showcase: ${topic}`,
+          description: 'Create something you can show others.',
+          order: 3,
+          tasks: [
+            mkTask(3,1,'Build a portfolio piece','Create a simple but polished artifact that demonstrates your skills.'),
+            mkTask(3,2,'Document learnings','Summarize what you learned and next steps.'),
+            mkTask(3,3,'Share publicly','Post your work in a relevant community.'),
+          ],
+        },
+      ],
+      suggestedTools: [
+        { id: 'tool-1', name: 'Notion', category: 'Organization', description: 'Plan tasks and take notes.' },
+        { id: 'tool-2', name: 'YouTube', category: 'Learning', description: 'Find tutorials and walkthroughs.' },
+        { id: 'tool-3', name: 'Google Keep', category: 'Notes', description: 'Quick notes and checklists.' },
+      ],
+    };
+  };
+
   const generateLearningPath = async () => {
     if (!userGoal.trim()) return;
     
@@ -84,7 +138,10 @@ export const MentorPath: React.FC<MentorPathProps> = ({ onPathGenerated }) => {
       throw new Error(lastError || 'Unknown error');
     } catch (error) {
       console.error('Error generating learning path:', error);
-      toast({ title: 'Generation failed', description: 'Could not reach the AI service. Please try again in a moment.', });
+      const fallback = buildFallbackPath(userGoal);
+      setCurrentPath(fallback);
+      onPathGenerated(fallback);
+      toast({ title: 'Using demo plan', description: 'AI service unavailable right now. Showing a quick plan so you can continue.' });
     } finally {
       setIsGenerating(false);
     }
