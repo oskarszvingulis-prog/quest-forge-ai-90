@@ -49,7 +49,7 @@ export const MentorPath: React.FC<MentorPathProps> = ({ onPathGenerated }) => {
     setIsGenerating(true);
     
     try {
-      const response = await fetch('/api/functions/v1/generate-learning-path', {
+      const response = await fetch('/functions/v1/generate-learning-path', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
