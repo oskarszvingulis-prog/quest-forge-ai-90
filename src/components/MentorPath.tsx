@@ -48,58 +48,29 @@ export const MentorPath: React.FC<MentorPathProps> = ({ onPathGenerated }) => {
     
     setIsGenerating(true);
     
-    // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Mock AI-generated learning path
-    const mockPath: LearningPath = {
-      goal: userGoal,
-      milestones: [
-        {
-          id: '1',
-          title: 'Foundation Building',
-          description: 'Establish core knowledge and understanding',
-          order: 1,
-          tasks: [
-            { id: '1-1', title: 'Research basics and fundamentals', description: 'Spend 2-3 hours learning core concepts', completed: false },
-            { id: '1-2', title: 'Create a learning schedule', description: 'Plan your weekly learning routine', completed: false },
-            { id: '1-3', title: 'Join relevant communities', description: 'Find online groups or forums', completed: false }
-          ]
+    try {
+      const response = await fetch('/api/functions/v1/generate-learning-path', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        {
-          id: '2',
-          title: 'Skill Development',
-          description: 'Practice and build practical skills',
-          order: 2,
-          tasks: [
-            { id: '2-1', title: 'Complete first practical exercise', description: 'Apply what you\'ve learned in a real project', completed: false },
-            { id: '2-2', title: 'Seek feedback from peers', description: 'Get input on your progress', completed: false },
-            { id: '2-3', title: 'Document your learning', description: 'Keep a journal or blog about your journey', completed: false }
-          ]
-        },
-        {
-          id: '3',
-          title: 'Advanced Application',
-          description: 'Apply skills in complex scenarios',
-          order: 3,
-          tasks: [
-            { id: '3-1', title: 'Work on a challenging project', description: 'Push your boundaries with advanced concepts', completed: false },
-            { id: '3-2', title: 'Mentor someone else', description: 'Teach others to reinforce your knowledge', completed: false },
-            { id: '3-3', title: 'Create a portfolio piece', description: 'Showcase your skills and progress', completed: false }
-          ]
-        }
-      ],
-      suggestedTools: [
-        { id: 'tool-1', name: 'Notion', category: 'Organization', description: 'All-in-one workspace for notes and planning' },
-        { id: 'tool-2', name: 'Coursera', category: 'Learning', description: 'Online courses from top universities' },
-        { id: 'tool-3', name: 'GitHub', category: 'Development', description: 'Version control and project hosting' },
-        { id: 'tool-4', name: 'YouTube', category: 'Learning', description: 'Video tutorials and educational content' }
-      ]
-    };
-    
-    setCurrentPath(mockPath);
-    setIsGenerating(false);
-    onPathGenerated(mockPath);
+        body: JSON.stringify({ goal: userGoal }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate learning path');
+      }
+
+      const learningPath = await response.json();
+      setCurrentPath(learningPath);
+      onPathGenerated(learningPath);
+    } catch (error) {
+      console.error('Error generating learning path:', error);
+      // Fallback to show error message or retry option
+      alert('Failed to generate learning path. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleStartOver = () => {
