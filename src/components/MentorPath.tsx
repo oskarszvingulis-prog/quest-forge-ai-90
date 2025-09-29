@@ -4,6 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Send, Sparkles, Target, CheckCircle } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
 interface Milestone {
   id: string;
@@ -49,25 +50,41 @@ export const MentorPath: React.FC<MentorPathProps> = ({ onPathGenerated }) => {
     setIsGenerating(true);
     
     try {
-      const response = await fetch('/functions/v1/generate-learning-path', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ goal: userGoal }),
-      });
+      const endpoints = [
+        '/functions/v1/generate-learning-path',
+        '/api/functions/v1/generate-learning-path',
+        '/api/functions/generate-learning-path',
+        '/edge-functions/generate-learning-path',
+        '/api/edge-functions/generate-learning-path',
+      ];
 
-      if (!response.ok) {
-        throw new Error('Failed to generate learning path');
+      let lastError: string | null = null;
+      for (const url of endpoints) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ goal: userGoal.trim() + '\n' }),
+          });
+
+          if (response.ok) {
+            const learningPath = await response.json();
+            setCurrentPath(learningPath);
+            onPathGenerated(learningPath);
+            toast({ title: 'Plan generated', description: 'Your personalized path is ready.' });
+            return;
+          }
+
+          lastError = `${response.status} ${response.statusText}`;
+        } catch (e) {
+          lastError = e instanceof Error ? e.message : String(e);
+        }
       }
 
-      const learningPath = await response.json();
-      setCurrentPath(learningPath);
-      onPathGenerated(learningPath);
+      throw new Error(lastError || 'Unknown error');
     } catch (error) {
       console.error('Error generating learning path:', error);
-      // Fallback to show error message or retry option
-      alert('Failed to generate learning path. Please try again.');
+      toast({ title: 'Generation failed', description: 'Could not reach the AI service. Please try again in a moment.', });
     } finally {
       setIsGenerating(false);
     }
